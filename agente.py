@@ -72,8 +72,17 @@ def regla_variable(paso):
 def regla_aprobacion(propuesta):
     """Regla 2: ninguna acción ocurre sin que una persona la apruebe."""
     return input(f"  El agente propone: {propuesta}\n  ¿La apruebas? (s/n) ").strip().lower() == "s"
+    
 
 # Agrega aquí una o dos reglas tuyas y pruébalas.
+
+# Regla de origen: Los datos estan clasificados como reales?
+def regla_origen(resultado):
+    return resultado.get("datos") == "reales"
+
+# Regla de horas: Valida las horas que se le piden analizar al agente con un limite de 1 a 72
+def regla_horas(paso):
+    return paso.horas is not None and 1 <= paso.horas <= 72
 
 # ---- 5. El ciclo del agente ------------------------------------------------
 def agente(pregunta):
@@ -98,6 +107,9 @@ def agente(pregunta):
         if not regla_variable(paso):
             print(f"  regla 1: bloqueé la consulta de '{paso.variable}'")
             resultado = {"error": f"no puedes consultar {paso.variable}", "permitidas": sorted(PERMITIDAS)}
+        elif not regla_horas(paso):
+            print(" Bloquee la consulta: horas fuera del rango")
+            resultado = {"error": "Debes indicar horas entre 1 y 72"}    
         else:
             resultado = dame_lectura(paso.variable, paso.horas or 1)
             print(f"  la herramienta devolvió: {resultado}")
