@@ -1,0 +1,9 @@
+# Secretos
+.env
+
+# Archivos generados por Python
+__pycache__/
+*.pyc
+
+# Base local de lecturas
+*.sqlite
